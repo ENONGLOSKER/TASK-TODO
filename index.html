@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK - TODO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-950">
+    <div class="container bg-blue-800 my-3 mx-auto sm:flex sm:justify-center px-5">
+        <div class="py-10">
+            <div class="flex space-x-2 items-center">
+                <h1 class="text-white font-bold text-xl sm:text-4xl">TASK - TODO</h1>
+                <ion-icon name="bookmarks" class="text-white w-5 h-5"></ion-icon>
+            </div>
+            <form id="todoForm" class="my-5">
+                <input id="todoInput" type="text" class="px-4 py-2 sm:w-80">
+                <button type="button" onclick="addOrUpdateTodo()" class="bg-red-500 text-white px-4 py-2 sm:w-32 sm:font-semibold" id="addOrUpdateButton">Add</button>
+            </form>
+            <div id="todoList" class="text-white font-semibold">
+                <ul>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- icon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        function addOrUpdateTodo() {
+            const todoInput = document.getElementById('todoInput');
+            const todoList = document.getElementById('todoList');
+            const addOrUpdateButton = document.getElementById('addOrUpdateButton');
+
+            if (todoInput.value.trim() !== '') {
+                const listItem = document.createElement('li');
+                listItem.className = 'flex justify-between';
+                
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'flex items-center justify-center space-x-4';
+
+                // complite
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.addEventListener('change', function () {
+                    listItem.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
+                });
+
+                // update and add
+                const todoText = document.createElement('span');
+                todoText.innerText = todoInput.value;
+                todoText.addEventListener('click', function () {
+                    todoInput.value = todoText.innerText;
+                    addOrUpdateButton.innerText = 'Oke';
+                    addOrUpdateButton.removeEventListener('click', addTodo);
+                    addOrUpdateButton.addEventListener('click', updateTodo);
+                });
+
+                checkboxDiv.appendChild(checkbox);
+                checkboxDiv.appendChild(todoText);
+
+                // delet
+                const deleteIcon = document.createElement('ion-icon');
+                deleteIcon.name = 'close-circle-outline';
+                deleteIcon.addEventListener('click', function () {
+                    listItem.remove();
+                });
+
+                listItem.appendChild(checkboxDiv);
+                listItem.appendChild(deleteIcon);
+
+                todoList.querySelector('ul').appendChild(listItem);
+                todoInput.value = '';
+            }
+        }
+
+        function updateTodo() {
+            const todoInput = document.getElementById('todoInput');
+            const addOrUpdateButton = document.getElementById('addOrUpdateButton');
+            
+            const listItem = todoInput.closest('li');
+            const todoText = listItem.querySelector('span');
+            
+            todoText.innerText = todoInput.value;
+
+            // Reset the input and button
+            todoInput.value = '';
+            addOrUpdateButton.innerText = 'Add';
+            addOrUpdateButton.removeEventListener('click', updateTodo);
+            addOrUpdateButton.addEventListener('click', addOrUpdateTodo);
+        }
+    </script>
+</body>
+</html>
